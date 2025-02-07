@@ -35,7 +35,7 @@ const Dcf = () => {
     // Nuvärde av kassaflöden
     let presentValueOfCashflow = [];
     // Kumulativt diskonterat kassaflöde (för graf)
-    let cumulativeDiscounted = [{ KASSAFLÖDE: cashFlow[0], år: 0 },];
+    let cumulativeDiscountedValues = [{ KASSAFLÖDE: cashFlow[0], år: 0 },];
   
     for (let i = 0; i < (growthPeriod + 85); i++) {
       let nextCashFlow;
@@ -50,15 +50,15 @@ const Dcf = () => {
 
       presentValueOfCashflow.push(nextCashFlow / Math.pow((1 + discountRate / 100), i + 1));
 
-      cumulativeDiscounted.push({
-        KASSAFLÖDE: presentValueOfCashflow[i] + cumulativeDiscounted[i].KASSAFLÖDE,
-        år: i + 1
+      cumulativeDiscountedValues.push({
+        KASSAFLÖDE: presentValueOfCashflow[i] + cumulativeDiscountedValues[i].KASSAFLÖDE,
+        ÅR: (i + 1)
       });
       
       console.log("år", (i+1), "cashflow:", nextCashFlow, "present value:", presentValueOfCashflow[i], "cumulative:", cumulativeDiscounted[i]);
     }
   
-    setCumulativeDiscounted(cumulativeDiscounted);
+    setCumulativeDiscounted(cumulativeDiscountedValues);
     console.log(cashFlow);
   }, [stockPrice, PEratio, growthPeriod, growthRate, growthRateInPerpetuity, discountRate]);
 
@@ -82,7 +82,7 @@ const Dcf = () => {
               type="monotone"
               dataKey="KASSAFLÖDE"
               stroke="#ffffff"
-              strokeWidth={1}
+              strokeWidth={2}
               dot={false}
             />
             <YAxis
@@ -105,7 +105,7 @@ const Dcf = () => {
               //     ? Math.round(value / 1000).toLocaleString() + " TKR"
               //     : (value / 1000000).toFixed(2).toLocaleString() + " MKR"
               // }
-              labelFormatter={(value) => "ÅR " + value}
+              labelFormatter={(value) => "ÅR: " + value}
               contentStyle={{
                 backgroundColor: "#fffffff, 0.8",
                 color: "#ffffff",
@@ -169,7 +169,7 @@ const Dcf = () => {
           setter={setGrowthRate}
           handleSlider={handleSliderChange}
           handleInput={handleInputChange}
-          title="Diskonteringsränta"
+          title="Ränta i tillväxtperiod"
           min={1}
           max={100}
           step={1}
