@@ -131,11 +131,14 @@ const Dcf = () => {
               fontWeight={400}
             />
             <Tooltip
-              // formatter={(value) =>
-              //   value < 999999
-              //     ? Math.round(value / 1000).toLocaleString() + " TKR"
-              //     : (value / 1000000).toFixed(2).toLocaleString() + " MKR"
-              // }
+              formatter={(value, name) => {
+                  if (name === "KASSAFLÖDE") {
+                    return value.toFixed(2);
+                  } else if (name === "AKTIEPRIS") {
+                    return `${value} kr`;
+                  }
+                }
+              }
               labelFormatter={(value) => "ÅR: " + value}
               contentStyle={{
                 backgroundColor: "#fffffff, 0.8",
