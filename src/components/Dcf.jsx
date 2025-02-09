@@ -35,30 +35,51 @@ const Dcf = () => {
     // Nuvärde av kassaflöden
     let presentValueOfCashflow = [];
     // Kumulativt diskonterat kassaflöde (för graf)
-    let cumulativeDiscountedValues = [{ KASSAFLÖDE: cashFlow[0], ÅR: 0, AKTIEPRIS: stockPrice }];
-  
-    for (let i = 0; i < (growthPeriod + 85); i++) {
+    let cumulativeDiscountedValues = [
+      { KASSAFLÖDE: cashFlow[0], ÅR: 0, AKTIEPRIS: stockPrice },
+    ];
+
+    for (let i = 0; i < growthPeriod + 85; i++) {
       let nextCashFlow;
-      
+
       if (cashFlow.length < growthPeriod) {
         nextCashFlow = cashFlow[cashFlow.length - 1] * (1 + growthRate / 100);
-        
       } else {
-        nextCashFlow = cashFlow[cashFlow.length - 1] * (1 + growthRateInPerpetuity / 100);
+        nextCashFlow =
+          cashFlow[cashFlow.length - 1] * (1 + growthRateInPerpetuity / 100);
       }
       cashFlow.push(nextCashFlow);
 
-      presentValueOfCashflow.push(nextCashFlow / Math.pow((1 + discountRate / 100), i + 1));
+      presentValueOfCashflow.push(
+        nextCashFlow / Math.pow(1 + discountRate / 100, i + 1)
+      );
 
       cumulativeDiscountedValues.push({
-        KASSAFLÖDE: presentValueOfCashflow[i] + cumulativeDiscountedValues[i].KASSAFLÖDE,
-        ÅR: (i + 1), AKTIEPRIS: stockPrice
+        KASSAFLÖDE:
+          presentValueOfCashflow[i] + cumulativeDiscountedValues[i].KASSAFLÖDE,
+        ÅR: i + 1,
+        AKTIEPRIS: stockPrice,
       });
     }
-  
+    let fundamentalStockValue = presentValueOfCashflow.slice(0).reduce((acc, val) => acc + val, 0).toFixed(2);
+
     setCumulativeDiscounted(cumulativeDiscountedValues);
+    setIntrinsicValue(fundamentalStockValue);
+    setMarginOfSafety((((fundamentalStockValue - stockPrice) / stockPrice) * 100).toFixed(1).toString() + "%");
+
+    console.log(intrinsicValue);
+    console.log(marginOfSafety);
     console.log(cumulativeDiscountedValues);
-  }, [stockPrice, PEratio, growthPeriod, growthRate, growthRateInPerpetuity, discountRate]);
+  }, [
+    stockPrice,
+    PEratio,
+    growthPeriod,
+    growthRate,
+    growthRateInPerpetuity,
+    discountRate,
+    intrinsicValue,
+    marginOfSafety,
+  ]);
 
   const handleInputChange = (setter) => (event) => {
     setter(event.target.value === "" ? "" : Number(event.target.value));
@@ -71,7 +92,12 @@ const Dcf = () => {
   return (
     <div className="dcf-body">
       <div className="dcf-header">
-        <h1>Discounted Cashflow</h1>
+        <p style={{ lineHeight: 1.68 }}>
+          Vår DCF-kalkylator hjälper dig att beräkna det uppskattade nuvärdet av
+          en investering baserat på framtida kassaflöden. Du kan justera
+          en rad olika parametrar nedan för att se
+          hur de påverkar värderingen.
+        </p>
       </div>
       <div className="dcf-graph">
         <ResponsiveContainer className="responsive-chart">
@@ -125,7 +151,7 @@ const Dcf = () => {
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div className="calc-input">
+      <div className="dcf-input">
         <DcfInput
           getter={stockPrice}
           setter={setStockPrice}
@@ -180,6 +206,25 @@ const Dcf = () => {
           step={1}
           unit="%"
         />
+      </div>
+      <div className="calc-result">
+        <p className="result-container">
+          {/* SLUTVÄRDE ÅR {timePeriod} <br /> */}
+          Fundamentalt aktievärde <br />
+          <p className="result">
+            {intrinsicValue}
+          </p>
+        </p>
+        <p className="result-container">
+        Upp/Nersida <br />
+          <p className="result">
+            {marginOfSafety}
+          </p>
+        </p>
+      </div>
+      <div className="disclaimer">
+        Beräkningarna är förenklade och tar inte hänsyn till oförutsedda
+        marknadsförändringar, skatter eller inflation.
       </div>
     </div>
   );

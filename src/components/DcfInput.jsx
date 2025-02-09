@@ -42,7 +42,7 @@ const DcfInput = ({
           borderRadius: 2,
           padding: .5,
           paddingLeft: 1.5,
-          marginBottom: 3,
+          marginBottom: 0,
           marginLeft: 5,
           width: 90,
           fontFamily: "bebas-neue-pro",
