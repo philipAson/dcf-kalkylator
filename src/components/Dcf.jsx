@@ -35,7 +35,7 @@ const Dcf = () => {
     // Nuvärde av kassaflöden
     let presentValueOfCashflow = [];
     // Kumulativt diskonterat kassaflöde (för graf)
-    let cumulativeDiscountedValues = [{ KASSAFLÖDE: cashFlow[0], år: 0 },];
+    let cumulativeDiscountedValues = [{ KASSAFLÖDE: cashFlow[0], ÅR: 0, AKTIEPRIS: stockPrice }];
   
     for (let i = 0; i < (growthPeriod + 85); i++) {
       let nextCashFlow;
@@ -52,14 +52,12 @@ const Dcf = () => {
 
       cumulativeDiscountedValues.push({
         KASSAFLÖDE: presentValueOfCashflow[i] + cumulativeDiscountedValues[i].KASSAFLÖDE,
-        ÅR: (i + 1)
+        ÅR: (i + 1), AKTIEPRIS: stockPrice
       });
-      
-      console.log("år", (i+1), "cashflow:", nextCashFlow, "present value:", presentValueOfCashflow[i], "cumulative:", cumulativeDiscounted[i]);
     }
   
     setCumulativeDiscounted(cumulativeDiscountedValues);
-    console.log(cashFlow);
+    console.log(cumulativeDiscountedValues);
   }, [stockPrice, PEratio, growthPeriod, growthRate, growthRateInPerpetuity, discountRate]);
 
   const handleInputChange = (setter) => (event) => {
@@ -82,6 +80,13 @@ const Dcf = () => {
               type="monotone"
               dataKey="KASSAFLÖDE"
               stroke="#ffffff"
+              strokeWidth={2}
+              dot={false}
+            />
+            <Line
+              type="monotone"
+              dataKey="AKTIEPRIS"
+              stroke="#F4A261"
               strokeWidth={2}
               dot={false}
             />
