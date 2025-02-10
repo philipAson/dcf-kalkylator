@@ -14,6 +14,12 @@ const Dcf = () => {
   const [discountRate, setDiscountRate] = useState(11);
   // Tillväxttakt till mognad
   const [growthRate, setGrowthRate] = useState(10);
+  // Payback period
+  const [paybackPeriod, setPaybackPeriod] = useState(0);
+  // Payback period color
+  const [paybackPeriodColor, setPaybackPeriodColor] = useState("152450");
+  // Margin of safety color
+  const [marginOfSafetyColor, setMarginOfSafetyColor] = useState("152450");
 
   // --- ASSUMPTIONS MODEL ---
   // Tillväxttakt i mogna fasen
@@ -39,7 +45,7 @@ const Dcf = () => {
       { KASSAFLÖDE: cashFlow[0], ÅR: 0, AKTIEPRIS: stockPrice },
     ];
 
-    for (let i = 0; i < growthPeriod + 85; i++) {
+    for (let i = 0; i < growthPeriod + 90; i++) {
       let nextCashFlow;
 
       if (cashFlow.length < growthPeriod) {
@@ -61,15 +67,52 @@ const Dcf = () => {
         AKTIEPRIS: stockPrice,
       });
     }
-    let fundamentalStockValue = presentValueOfCashflow.slice(0).reduce((acc, val) => acc + val, 0).toFixed(2);
+    let fundamentalStockValue = presentValueOfCashflow
+      .slice(0)
+      .reduce((acc, val) => acc + val, 0)
+      .toFixed(1);
 
+    let marginOfSafety = (
+      ((fundamentalStockValue - stockPrice) / stockPrice) *
+      100
+    ).toFixed(1);
+
+    let paybackPeriod =
+      cumulativeDiscountedValues[
+        cumulativeDiscountedValues.findIndex(
+          (object) => object.KASSAFLÖDE > stockPrice
+        )
+      ]?.ÅR ?? 0;
+
+    const getPaybackPeriodColor = (paybackPeriod) => {
+      if (paybackPeriod <= 0) {
+        return "#E76F51"; // röd
+      } else if (paybackPeriod <= 7) {
+        return "#2B9348"; // grön
+      } else if (paybackPeriod <= 12) {
+        return "#152450"; // neutral/mörkblå
+      } else {
+        return "#E76F51"; // röd
+      }
+    };
+
+    const getMarginOfSafetyColor = (marginOfSafety) => {
+      if (marginOfSafety <= 0) {
+        return "#E76F51"; // Röd
+      } else if (marginOfSafety < 20) {
+        return "#152450"; // Neutral
+      } else {
+        return "#2B9348"; // Grön
+      }
+    };
+    let paybackPeriodColor = getPaybackPeriodColor(paybackPeriod);
+    let marginOfSafetyColor = getMarginOfSafetyColor(marginOfSafety);
     setCumulativeDiscounted(cumulativeDiscountedValues);
     setIntrinsicValue(fundamentalStockValue);
-    setMarginOfSafety((((fundamentalStockValue - stockPrice) / stockPrice) * 100).toFixed(1).toString() + "%");
-
-    console.log(intrinsicValue);
-    console.log(marginOfSafety);
-    console.log(cumulativeDiscountedValues);
+    setMarginOfSafety(marginOfSafety);
+    setPaybackPeriod(paybackPeriod);
+    setPaybackPeriodColor(paybackPeriodColor);
+    setMarginOfSafetyColor(marginOfSafetyColor);
   }, [
     stockPrice,
     PEratio,
@@ -79,6 +122,9 @@ const Dcf = () => {
     discountRate,
     intrinsicValue,
     marginOfSafety,
+    paybackPeriod,
+    paybackPeriodColor,
+    marginOfSafetyColor,
   ]);
 
   const handleInputChange = (setter) => (event) => {
@@ -94,9 +140,8 @@ const Dcf = () => {
       <div className="dcf-header">
         <p style={{ lineHeight: 1.68 }}>
           Vår DCF-kalkylator hjälper dig att beräkna det uppskattade nuvärdet av
-          en investering baserat på framtida kassaflöden. Du kan justera
-          en rad olika parametrar nedan för att se
-          hur de påverkar värderingen.
+          en investering baserat på framtida kassaflöden. Du kan justera en rad
+          olika parametrar nedan för att se hur de påverkar värderingen.
         </p>
       </div>
       <div className="dcf-graph">
@@ -132,13 +177,12 @@ const Dcf = () => {
             />
             <Tooltip
               formatter={(value, name) => {
-                  if (name === "KASSAFLÖDE") {
-                    return value.toFixed(2);
-                  } else if (name === "AKTIEPRIS") {
-                    return `${value} kr`;
-                  }
+                if (name === "KASSAFLÖDE") {
+                  return `${value.toFixed(2)} kr`;
+                } else if (name === "AKTIEPRIS") {
+                  return `${value} kr`;
                 }
-              }
+              }}
               labelFormatter={(value) => "ÅR: " + value}
               contentStyle={{
                 backgroundColor: "#fffffff, 0.8",
@@ -160,7 +204,7 @@ const Dcf = () => {
           setter={setStockPrice}
           handleSlider={handleSliderChange}
           handleInput={handleInputChange}
-          title="Aktiepris"
+          title="Aktiepris per år"
           min={10}
           max={20000}
           step={10}
@@ -214,20 +258,30 @@ const Dcf = () => {
         <p className="result-container">
           {/* SLUTVÄRDE ÅR {timePeriod} <br /> */}
           Fundamentalt aktievärde <br />
-          <p className="result">
-            {intrinsicValue}
+          <p className="dcf-result">{intrinsicValue}kr</p>
+        </p>
+        <p className="result-container">
+          Upp/Nersida <br />
+          <p
+            className="dcf-result"
+            style={{ backgroundColor: marginOfSafetyColor }}
+          >
+            {marginOfSafety}%
           </p>
         </p>
         <p className="result-container">
-        Upp/Nersida <br />
-          <p className="result">
-            {marginOfSafety}
+          Payback-period <br />
+          <p
+            className="dcf-result"
+            style={{ backgroundColor: paybackPeriodColor }}
+          >
+            {paybackPeriod}år
           </p>
         </p>
       </div>
       <div className="disclaimer">
-        Beräkningarna är förenklade och tar inte hänsyn till oförutsedda
-        marknadsförändringar, skatter eller inflation.
+        Beräkningarna tar inte hänsyn till oförutsedda marknadsförändringar,
+        skatter eller inflation.
       </div>
     </div>
   );

@@ -70,12 +70,17 @@
   margin-right: 40px;
 }
 
-.result {
-  font-family: "bebas-neue-pro", sans-serif;
+.dcf-result {
   font-weight: 300;
   font-size: 42px;
   line-height: 1;
-  margin: 0;
+  background-color: #152450; 
+  padding: 3px 8px;
+  font-family: bebas-neue-pro, sans-serif;
+  letter-spacing: 1.4px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 10px;
 }
 
 .disclaimer {

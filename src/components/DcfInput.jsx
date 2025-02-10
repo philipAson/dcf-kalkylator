@@ -39,7 +39,7 @@ const DcfInput = ({
         sx={{
           color: "#ffffff",
           backgroundColor: "#152450",
-          borderRadius: 2,
+          borderRadius: 1,
           padding: .5,
           paddingLeft: 1.5,
           marginBottom: 0,
