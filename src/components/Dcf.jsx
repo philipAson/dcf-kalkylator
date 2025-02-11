@@ -83,7 +83,23 @@ const Dcf = () => {
           (object) => object.KASSAFLÖDE > stockPrice
         )
       ]?.ÅR ?? 0;
-
+    
+      const formatInstrinctValue = (value) => {
+        if (value < 1_000_000) {
+          // Under 1 miljon → exempelvis 123 456 kr
+          return value.toLocaleString("sv-SE") + " kr";
+        } else {
+          // 1 miljon eller mer → exempelvis 1,23 Mkr
+          const millions = value / 1_000_000;
+          // Exempelvis 1.234942 => "1,23"
+          const formatted = millions.toLocaleString("sv-SE", {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1,
+          });
+          return formatted + " Mkr";
+        }
+      };
+      
     const getPaybackPeriodColor = (paybackPeriod) => {
       if (paybackPeriod <= 0) {
         return "#E76F51"; // röd
@@ -108,7 +124,7 @@ const Dcf = () => {
     let paybackPeriodColor = getPaybackPeriodColor(paybackPeriod);
     let marginOfSafetyColor = getMarginOfSafetyColor(marginOfSafety);
     setCumulativeDiscounted(cumulativeDiscountedValues);
-    setIntrinsicValue(fundamentalStockValue);
+    setIntrinsicValue(formatInstrinctValue(fundamentalStockValue));
     setMarginOfSafety(marginOfSafety);
     setPaybackPeriod(paybackPeriod);
     setPaybackPeriodColor(paybackPeriodColor);
@@ -258,7 +274,7 @@ const Dcf = () => {
         <p className="result-container">
           {/* SLUTVÄRDE ÅR {timePeriod} <br /> */}
           Fundamentalt aktievärde <br />
-          <p className="dcf-result">{intrinsicValue}kr</p>
+          <p className="dcf-result">{intrinsicValue}</p>
         </p>
         <p className="result-container">
           Upp/Nersida <br />
