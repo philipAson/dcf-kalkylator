@@ -222,7 +222,7 @@ const Dcf = () => {
           handleInput={handleInputChange}
           title="Aktiepris per år"
           min={10}
-          max={20000}
+          max={300}
           step={10}
           unit="kr"
         />
@@ -243,7 +243,7 @@ const Dcf = () => {
           handleInput={handleInputChange}
           title="Tillväxtperiod"
           min={1}
-          max={15}
+          max={10}
           step={1}
           unit="år"
         />
