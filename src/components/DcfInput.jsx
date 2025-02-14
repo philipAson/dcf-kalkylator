@@ -1,5 +1,5 @@
 import React from "react";
-import { Slider, Grid, Input, Typography, Box } from "@mui/material";
+import { Slider, Grid, Input, Tooltip, Typography, Box } from "@mui/material";
 
 const DcfInput = ({
   getter,
@@ -11,6 +11,7 @@ const DcfInput = ({
   max,
   step,
   unit,
+  children,
 }) => {
   return (
     <div className="input-grid">
@@ -24,6 +25,7 @@ const DcfInput = ({
         marginBottom={0}
       >
         {title} {unit ? `(${unit})` : ""}
+        {children}
       </Typography>
       <Slider
         aria-label={title}

@@ -14,10 +14,6 @@ const Dcf = () => {
   const [discountRate, setDiscountRate] = useState(11);
   // Tillväxttakt till mognad
   const [growthRate, setGrowthRate] = useState(10);
-  // Payback period
-  const [paybackPeriod, setPaybackPeriod] = useState(0);
-  // Payback period color
-  const [paybackPeriodColor, setPaybackPeriodColor] = useState("152450");
   // Margin of safety color
   const [marginOfSafetyColor, setMarginOfSafetyColor] = useState("152450");
 
@@ -77,57 +73,37 @@ const Dcf = () => {
       100
     ).toFixed(1);
 
-    let paybackPeriod =
-      cumulativeDiscountedValues[
-        cumulativeDiscountedValues.findIndex(
-          (object) => object.KASSAFLÖDE > stockPrice
-        )
-      ]?.ÅR ?? 0;
-    
-      const formatInstrinctValue = (value) => {
-        if (value < 1_000_000) {
-          // Under 1 miljon → exempelvis 123 456 kr
-          return value.toLocaleString("sv-SE") + " kr";
-        } else {
-          // 1 miljon eller mer → exempelvis 1,23 Mkr
-          const millions = value / 1_000_000;
-          // Exempelvis 1.234942 => "1,23"
-          const formatted = millions.toLocaleString("sv-SE", {
-            minimumFractionDigits: 1,
-            maximumFractionDigits: 1,
-          });
-          return formatted + " Mkr";
-        }
-      };
-      
-    const getPaybackPeriodColor = (paybackPeriod) => {
-      if (paybackPeriod <= 0) {
-        return "#E76F51"; // röd
-      } else if (paybackPeriod <= 7) {
-        return "#2B9348"; // grön
-      } else if (paybackPeriod <= 12) {
-        return "#152450"; // neutral/mörkblå
+    const formatInstrinctValue = (value) => {
+      if (value < 1_000_000) {
+        // Under 1 miljon → exempelvis 123 456 kr
+        return value.toLocaleString("sv-SE") + " kr";
       } else {
-        return "#E76F51"; // röd
+        // 1 miljon eller mer → exempelvis 1,23 Mkr
+        const millions = value / 1_000_000;
+        // Exempelvis 1.234942 => "1,23"
+        const formatted = millions.toLocaleString("sv-SE", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1,
+        });
+        return formatted + " Mkr";
       }
     };
 
     const getMarginOfSafetyColor = (marginOfSafety) => {
       if (marginOfSafety <= 0) {
         return "#E76F51"; // Röd
-      } else if (marginOfSafety < 20) {
+      } else if (marginOfSafety < 15) {
         return "#152450"; // Neutral
       } else {
         return "#2B9348"; // Grön
       }
     };
-    let paybackPeriodColor = getPaybackPeriodColor(paybackPeriod);
+
     let marginOfSafetyColor = getMarginOfSafetyColor(marginOfSafety);
     setCumulativeDiscounted(cumulativeDiscountedValues);
     setIntrinsicValue(formatInstrinctValue(fundamentalStockValue));
     setMarginOfSafety(marginOfSafety);
-    setPaybackPeriod(paybackPeriod);
-    setPaybackPeriodColor(paybackPeriodColor);
+
     setMarginOfSafetyColor(marginOfSafetyColor);
   }, [
     stockPrice,
@@ -138,8 +114,6 @@ const Dcf = () => {
     discountRate,
     intrinsicValue,
     marginOfSafety,
-    paybackPeriod,
-    paybackPeriodColor,
     marginOfSafetyColor,
   ]);
 
@@ -220,7 +194,7 @@ const Dcf = () => {
           setter={setStockPrice}
           handleSlider={handleSliderChange}
           handleInput={handleInputChange}
-          title="Aktiepris per år"
+          title="Dagens aktiepris"
           min={10}
           max={300}
           step={10}
@@ -237,12 +211,23 @@ const Dcf = () => {
           step={1}
         />
         <DcfInput
+          getter={growthRate}
+          setter={setGrowthRate}
+          handleSlider={handleSliderChange}
+          handleInput={handleInputChange}
+          title="Årlig tillväxttakt"
+          min={1}
+          max={100}
+          step={1}
+          unit="%"
+        />
+        <DcfInput
           getter={growthPeriod}
           setter={setGrowthPeriod}
           handleSlider={handleSliderChange}
           handleInput={handleInputChange}
-          title="Tillväxtperiod"
-          min={1}
+          title="Period tills moget stadie"
+          min={3}
           max={10}
           step={1}
           unit="år"
@@ -258,26 +243,10 @@ const Dcf = () => {
           step={1}
           unit="%"
         />
-        <DcfInput
-          getter={growthRate}
-          setter={setGrowthRate}
-          handleSlider={handleSliderChange}
-          handleInput={handleInputChange}
-          title="Ränta i tillväxtperiod"
-          min={1}
-          max={100}
-          step={1}
-          unit="%"
-        />
       </div>
       <div className="calc-result">
         <p className="result-container">
-          {/* SLUTVÄRDE ÅR {timePeriod} <br /> */}
-          Fundamentalt aktievärde <br />
-          <p className="dcf-result">{intrinsicValue}</p>
-        </p>
-        <p className="result-container">
-          Upp/Nersida <br />
+          UPP/NERSIDA <br />
           <p
             className="dcf-result"
             style={{ backgroundColor: marginOfSafetyColor }}
@@ -286,18 +255,13 @@ const Dcf = () => {
           </p>
         </p>
         <p className="result-container">
-          Payback-period <br />
-          <p
-            className="dcf-result"
-            style={{ backgroundColor: paybackPeriodColor }}
-          >
-            {paybackPeriod}år
-          </p>
+          FUNDAMENTALT AKTIEVÄRDE <br />
+          <p className="dcf-result">{intrinsicValue}</p>
         </p>
       </div>
       <div className="disclaimer">
-        Beräkningarna tar inte hänsyn till oförutsedda marknadsförändringar,
-        skatter eller inflation.
+        Beräkningarna tar inte hänsyn till oförutsedda marknadshändelser och
+        reflekterar endast de uppgifter som lagts in i modellen.
       </div>
     </div>
   );
