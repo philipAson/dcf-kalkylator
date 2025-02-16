@@ -1,7 +1,7 @@
 import React from "react";
-import { Slider, Tooltip, Input, Typography, Icon} from "@mui/material";
+import { Slider, Tooltip, Input, Typography, tooltipClasses} from "@mui/material";
 import { styled } from '@mui/material/styles';
-import InfoIcon from '@mui/icons-material/Info';
+import CustomToolTip from "./CustomToolTip";
 
 const DcfInput = ({
   getter,
@@ -29,7 +29,7 @@ const DcfInput = ({
         gutterBottom
         marginBottom={0}
       >
-        {title} {unit ? `(${unit})` : ""} {toolTip ? <Tooltip title={toolTipText} placement="top-start"><InfoIcon sx={{fontSize: 14, marginLeft: 1}}/></Tooltip> : ""}
+        {title} {unit ? `(${unit})` : ""} {toolTip ? <CustomToolTip toolTipText={toolTipText}/> : ""}
       </Typography>
       
       

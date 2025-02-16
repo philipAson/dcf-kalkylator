@@ -1,4 +1,5 @@
 import DcfInput from "./DcfInput";
+import CustomToolTip from "./CustomToolTip";
 import React, { useState, useEffect } from "react";
 import { LineChart, Line, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
@@ -256,7 +257,7 @@ const Dcf = () => {
       </div>
       <div className="calc-result">
         <p className="result-container">
-          UPP/NERSIDA <br />
+          <p style={{margin: 0}}>UPP/NERSIDA</p>
           <p
             className="dcf-result"
             style={{ backgroundColor: marginOfSafetyColor }}
@@ -264,14 +265,15 @@ const Dcf = () => {
             {marginOfSafety}%
           </p>
         </p>
-        <p className="result-container">
-          FUNDAMENTALT AKTIEVÄRDE <br />
+        <p className="result-container" >
+           <p style={{margin: 0}}>FUNDAMENTALT AKTIEVÄRDE <CustomToolTip toolTipText={longText}/></p>
           <p className="dcf-result">{intrinsicValue}</p>
         </p>
       </div>
       <div className="disclaimer">
         Beräkningarna tar inte hänsyn till oförutsedda marknadshändelser och
         reflekterar endast de uppgifter som lagts in i modellen.
+        <CustomToolTip toolTipText={longText} />
       </div>
     </div>
   );
