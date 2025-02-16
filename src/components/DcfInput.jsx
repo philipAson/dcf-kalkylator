@@ -1,5 +1,7 @@
 import React from "react";
-import { Slider, Grid, Input, Tooltip, Typography, Box } from "@mui/material";
+import { Slider, Tooltip, Input, Typography, Icon} from "@mui/material";
+import { styled } from '@mui/material/styles';
+import InfoIcon from '@mui/icons-material/Info';
 
 const DcfInput = ({
   getter,
@@ -11,10 +13,17 @@ const DcfInput = ({
   max,
   step,
   unit,
-  children,
 }) => {
+
+  const longText = `
+    Aliquam eget finibus ante, non facilisis lectus. Sed vitae dignissim est, vel aliquam tellus.
+    Praesent non nunc mollis, fermentum neque at, semper arcu.
+    Nullam eget est sed sem iaculis gravida eget vitae justo.
+    `;
+
   return (
     <div className="input-grid">
+      
       <Typography
         id="input-slider"
         sx={{ color: "#ffffff", textAlign: "left", gridRow: "1"}}
@@ -24,9 +33,10 @@ const DcfInput = ({
         gutterBottom
         marginBottom={0}
       >
-        {title} {unit ? `(${unit})` : ""}
-        {children}
+        {title} {unit ? `(${unit})` : ""} <Tooltip title={longText} placement="top-start"><InfoIcon sx={{fontSize: 14, marginLeft: 1}}/></Tooltip>
       </Typography>
+      
+      
       <Slider
         aria-label={title}
         sx={{color: "#ffffff", gridRow: "2"}}
