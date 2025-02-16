@@ -13,13 +13,9 @@ const DcfInput = ({
   max,
   step,
   unit,
+  toolTip = false,
+  toolTipText = "",
 }) => {
-
-  const longText = `
-    Aliquam eget finibus ante, non facilisis lectus. Sed vitae dignissim est, vel aliquam tellus.
-    Praesent non nunc mollis, fermentum neque at, semper arcu.
-    Nullam eget est sed sem iaculis gravida eget vitae justo.
-    `;
 
   return (
     <div className="input-grid">
@@ -33,7 +29,7 @@ const DcfInput = ({
         gutterBottom
         marginBottom={0}
       >
-        {title} {unit ? `(${unit})` : ""} <Tooltip title={longText} placement="top-start"><InfoIcon sx={{fontSize: 14, marginLeft: 1}}/></Tooltip>
+        {title} {unit ? `(${unit})` : ""} {toolTip ? <Tooltip title={toolTipText} placement="top-start"><InfoIcon sx={{fontSize: 14, marginLeft: 1}}/></Tooltip> : ""}
       </Typography>
       
       

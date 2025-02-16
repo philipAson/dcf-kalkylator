@@ -125,6 +125,12 @@ const Dcf = () => {
     setter(newValue);
   };
 
+  const longText = `
+    Aliquam eget finibus ante, non facilisis lectus. Sed vitae dignissim est, vel aliquam tellus.
+    Praesent non nunc mollis, fermentum neque at, semper arcu.
+    Nullam eget est sed sem iaculis gravida eget vitae justo.
+    `;
+
   return (
     <div className="dcf-body">
       <div className="dcf-header">
@@ -220,6 +226,8 @@ const Dcf = () => {
           max={100}
           step={1}
           unit="%"
+          toolTip={true}
+          toolTipText={longText}
         />
         <DcfInput
           getter={growthPeriod}
@@ -242,6 +250,8 @@ const Dcf = () => {
           max={100}
           step={1}
           unit="%"
+          toolTip={true}
+          toolTipText={longText}
         />
       </div>
       <div className="calc-result">
