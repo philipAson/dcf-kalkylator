@@ -1,5 +1,6 @@
 import DcfInput from "./DcfInput";
 import CustomToolTip from "./CustomToolTip";
+import ToolTipTexts from "./ToolTipTexts";
 import React, { useState, useEffect } from "react";
 import { LineChart, Line, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
@@ -203,9 +204,11 @@ const Dcf = () => {
           handleInput={handleInputChange}
           title="Dagens aktiepris"
           min={10}
-          max={300}
+          max={1000}
           step={10}
           unit="kr"
+          toolTip={true}
+          toolTipText={ToolTipTexts.stockPrice}
         />
         <DcfInput
           getter={PEratio}
@@ -214,8 +217,10 @@ const Dcf = () => {
           handleInput={handleInputChange}
           title="P/E-tal"
           min={1}
-          max={100}
+          max={75}
           step={1}
+          toolTip={true}
+          toolTipText={ToolTipTexts.PEratio}
         />
         <DcfInput
           getter={growthRate}
@@ -224,11 +229,11 @@ const Dcf = () => {
           handleInput={handleInputChange}
           title="Årlig tillväxttakt"
           min={1}
-          max={100}
+          max={50}
           step={1}
           unit="%"
           toolTip={true}
-          toolTipText={longText}
+          toolTipText={ToolTipTexts.growthRate}
         />
         <DcfInput
           getter={growthPeriod}
@@ -237,9 +242,11 @@ const Dcf = () => {
           handleInput={handleInputChange}
           title="Period tills moget stadie"
           min={3}
-          max={10}
+          max={30}
           step={1}
           unit="år"
+          toolTip={true}
+          toolTipText={ToolTipTexts.growthPeriod}
         />
         <DcfInput
           getter={discountRate}
@@ -248,11 +255,11 @@ const Dcf = () => {
           handleInput={handleInputChange}
           title="Diskonteringsränta"
           min={1}
-          max={100}
+          max={20}
           step={1}
           unit="%"
           toolTip={true}
-          toolTipText={longText}
+          toolTipText={ToolTipTexts.discountRate}
         />
       </div>
       <div className="calc-result">
@@ -266,14 +273,13 @@ const Dcf = () => {
           </p>
         </p>
         <p className="result-container" >
-           <p style={{margin: 0}}>FUNDAMENTALT AKTIEVÄRDE <CustomToolTip toolTipText={longText}/></p>
+           <p style={{margin: 0}}>FUNDAMENTALT AKTIEVÄRDE <CustomToolTip toolTipText={ToolTipTexts.fairValue}/></p>
           <p className="dcf-result">{intrinsicValue}</p>
         </p>
       </div>
       <div className="disclaimer">
         Beräkningarna tar inte hänsyn till oförutsedda marknadshändelser och
         reflekterar endast de uppgifter som lagts in i modellen.
-        <CustomToolTip toolTipText={longText} />
       </div>
     </div>
   );
