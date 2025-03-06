@@ -40,7 +40,11 @@ const Dcf = () => {
     let presentValueOfCashflow = [];
     // Kumulativt diskonterat kassaflöde (för graf)
     let cumulativeDiscountedValues = [
-      { KASSAFLÖDE: cashFlow[0], ÅR: 0, AKTIEPRIS: stockPrice },
+      {
+        "DISKONTERAT KASSAFLÖDE": cashFlow[0],
+        ÅR: 0,
+        "DAGENS AKTIEPRIS": stockPrice,
+      },
     ];
 
     for (let i = 0; i < growthPeriod + 90; i++) {
@@ -59,10 +63,11 @@ const Dcf = () => {
       );
 
       cumulativeDiscountedValues.push({
-        KASSAFLÖDE:
-          presentValueOfCashflow[i] + cumulativeDiscountedValues[i].KASSAFLÖDE,
+        "DISKONTERAT KASSAFLÖDE":
+          presentValueOfCashflow[i] +
+          cumulativeDiscountedValues[i]["DISKONTERAT KASSAFLÖDE"],
         ÅR: i + 1,
-        AKTIEPRIS: stockPrice,
+        "DAGENS AKTIEPRIS": stockPrice,
       });
     }
     let fundamentalStockValue = presentValueOfCashflow
@@ -77,17 +82,15 @@ const Dcf = () => {
 
     const formatInstrinctValue = (value) => {
       if (value < 1_000_000) {
-        // Under 1 miljon → exempelvis 123 456 kr
-        return value.toLocaleString("sv-SE") + " kr";
+        return value.toLocaleString("sv-SE");
       } else {
-        // 1 miljon eller mer → exempelvis 1,23 Mkr
         const millions = value / 1_000_000;
-        // Exempelvis 1.234942 => "1,23"
+
         const formatted = millions.toLocaleString("sv-SE", {
           minimumFractionDigits: 1,
           maximumFractionDigits: 1,
         });
-        return formatted + " Mkr";
+        return formatted + " M";
       }
     };
 
@@ -95,7 +98,7 @@ const Dcf = () => {
       if (marginOfSafety <= 0) {
         return "#E76F51"; // Röd
       } else if (marginOfSafety < 15) {
-        return "#152450"; // Neutral
+        return "#152450"; // Neutral(blå)
       } else {
         return "#2B9348"; // Grön
       }
@@ -127,34 +130,24 @@ const Dcf = () => {
     setter(newValue);
   };
 
-  const longText = `
-    Aliquam eget finibus ante, non facilisis lectus. Sed vitae dignissim est, vel aliquam tellus.
-    Praesent non nunc mollis, fermentum neque at, semper arcu.
-    Nullam eget est sed sem iaculis gravida eget vitae justo.
-    `;
-
   return (
     <div className="dcf-body">
       <div className="dcf-header">
-        <p style={{ lineHeight: 1.68 }}>
-          Vår DCF-kalkylator hjälper dig att beräkna det uppskattade nuvärdet av
-          en investering baserat på framtida kassaflöden. Du kan justera en rad
-          olika parametrar nedan för att se hur de påverkar värderingen.
-        </p>
+        <p style={{ lineHeight: 1.68 }}>{ToolTipTexts.dcfHeader}</p>
       </div>
       <div className="dcf-graph">
         <ResponsiveContainer className="responsive-chart">
           <LineChart className="chart" data={cumulativeDiscounted}>
             <Line
               type="monotone"
-              dataKey="KASSAFLÖDE"
+              dataKey="DISKONTERAT KASSAFLÖDE"
               stroke="#ffffff"
               strokeWidth={2}
               dot={false}
             />
             <Line
               type="monotone"
-              dataKey="AKTIEPRIS"
+              dataKey="DAGENS AKTIEPRIS"
               stroke="#F4A261"
               strokeWidth={2}
               dot={false}
@@ -164,21 +157,16 @@ const Dcf = () => {
               width={90}
               tick={{ fill: "#ffffff" }}
               type={"number"}
-              // tickFormatter={(value) =>
-              //   value < 999999
-              //     ? Math.round(value / 1000).toLocaleString() + " TKR"
-              //     : (value / 1000000).toFixed(2).toLocaleString() + " MKR"
-              // }
               tickMargin={10}
               fontFamily="bebas-neue-pro"
               fontWeight={400}
             />
             <Tooltip
               formatter={(value, name) => {
-                if (name === "KASSAFLÖDE") {
-                  return `${value.toFixed(2)} kr`;
-                } else if (name === "AKTIEPRIS") {
-                  return `${value} kr`;
+                if (name === "DISKONTERAT KASSAFLÖDE") {
+                  return value.toFixed(2);
+                } else if (name === "DAGENS AKTIEPRIS") {
+                  return value;
                 }
               }}
               labelFormatter={(value) => "ÅR: " + value}
@@ -206,7 +194,6 @@ const Dcf = () => {
           min={10}
           max={1000}
           step={10}
-          unit="kr"
           toolTip={true}
           toolTipText={ToolTipTexts.stockPrice}
         />
@@ -262,9 +249,9 @@ const Dcf = () => {
           toolTipText={ToolTipTexts.discountRate}
         />
       </div>
-      <div className="calc-result">
+      <div className="dcf-calc-result">
         <p className="result-container">
-          <p style={{margin: 0}}>UPP/NERSIDA</p>
+          <p style={{ margin: 0 }}>UPP/NERSIDA</p>
           <p
             className="dcf-result"
             style={{ backgroundColor: marginOfSafetyColor }}
@@ -272,15 +259,15 @@ const Dcf = () => {
             {marginOfSafety}%
           </p>
         </p>
-        <p className="result-container" >
-           <p style={{margin: 0}}>FUNDAMENTALT AKTIEVÄRDE <CustomToolTip toolTipText={ToolTipTexts.fairValue}/></p>
+        <p className="result-container">
+          <p style={{ margin: 0 }}>
+            FUNDAMENTALT AKTIEVÄRDE{" "}
+            <CustomToolTip toolTipText={ToolTipTexts.fairValue} />
+          </p>
           <p className="dcf-result">{intrinsicValue}</p>
         </p>
       </div>
-      <div className="disclaimer">
-        Beräkningarna tar inte hänsyn till oförutsedda marknadshändelser och
-        reflekterar endast de uppgifter som lagts in i modellen.
-      </div>
+      <div className="dcf-disclaimer">{ToolTipTexts.dcfDisclaimer}</div>
     </div>
   );
 };

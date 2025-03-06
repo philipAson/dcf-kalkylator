@@ -12,6 +12,8 @@ const CustomToolTip = ({ toolTipText = "" }) => {
       color: "rgba(0, 0, 0, 0.87)",
       boxShadow: theme.shadows[1],
       fontSize: 11,
+      minWidth: 500,
+      whiteSpace: "pre-line !important",
     },
   }));
 

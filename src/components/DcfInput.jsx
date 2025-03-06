@@ -18,7 +18,7 @@ const DcfInput = ({
 }) => {
 
   return (
-    <div className="input-grid">
+    <div className="dcf-input-grid">
       
       <Typography
         id="input-slider"
