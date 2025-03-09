@@ -31,6 +31,8 @@ const Dcf = () => {
   const [intrinsicValue, setIntrinsicValue] = useState(0);
   // Upp eller nersida
   const [marginOfSafety, setMarginOfSafety] = useState(0);
+  // Margin of safety formatted for display
+  const [marginOfSafetyFormatted, setMarginOfSafetyFormatted] = useState(0);
 
   // Calculate the cash flow for x years
   useEffect(() => {
@@ -94,6 +96,20 @@ const Dcf = () => {
       }
     };
 
+    const formatMarginOfSafety = (value) => {
+      if (value < 1_000_000) {
+        return value.toLocaleString("sv-SE");
+      } else {
+        const millions = value / 1_000_000;
+
+        const formatted = millions.toLocaleString("sv-SE", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1,
+        });
+        return formatted + " M";
+      }
+    };
+
     const getMarginOfSafetyColor = (marginOfSafety) => {
       if (marginOfSafety <= 0) {
         return "#E76F51"; // Röd
@@ -107,6 +123,7 @@ const Dcf = () => {
     let marginOfSafetyColor = getMarginOfSafetyColor(marginOfSafety);
     setCumulativeDiscounted(cumulativeDiscountedValues);
     setIntrinsicValue(formatInstrinctValue(fundamentalStockValue));
+    setMarginOfSafetyFormatted(formatMarginOfSafety(marginOfSafety));
     setMarginOfSafety(marginOfSafety);
 
     setMarginOfSafetyColor(marginOfSafetyColor);
@@ -154,10 +171,15 @@ const Dcf = () => {
             />
             <YAxis
               padding={{ top: 11 }}
-              width={90}
+              width={55}
               tick={{ fill: "#ffffff" }}
               type={"number"}
               tickMargin={10}
+              tickFormatter={(value) =>
+                value < 999999
+                  ? Math.round(value / 1000).toLocaleString() + " TKR"
+                  : (value / 1000000).toFixed(2).toLocaleString() + " MKR"
+              }
               fontFamily="bebas-neue-pro"
               fontWeight={400}
             />
@@ -250,16 +272,16 @@ const Dcf = () => {
         />
       </div>
       <div className="dcf-calc-result">
-        <p className="result-container">
+        <p className="dcf-result-container">
           <p style={{ margin: 0 }}>UPP/NERSIDA</p>
           <p
             className="dcf-result"
             style={{ backgroundColor: marginOfSafetyColor }}
           >
-            {marginOfSafety}%
+            {marginOfSafetyFormatted}%
           </p>
         </p>
-        <p className="result-container">
+        <p className="dcf-result-container r">
           <p style={{ margin: 0 }}>
             FUNDAMENTALT AKTIEVÄRDE{" "}
             <CustomToolTip toolTipText={ToolTipTexts.fairValue} />

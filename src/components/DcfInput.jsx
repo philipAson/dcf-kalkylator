@@ -22,9 +22,18 @@ const DcfInput = ({
       
       <Typography
         id="input-slider"
-        sx={{ color: "#ffffff", textAlign: "left", gridRow: "1"}}
+        sx={{ 
+          color: "#ffffff", 
+          textAlign: "left", 
+          gridRow: "1",
+          fontSize: {
+            xs: "10px",
+            sm: "8px",
+            md: "12px",
+            lg: "14px",
+          }
+        }}
         fontFamily={"Raleway, sans-serif"}
-        fontSize={14}
         fontWeight={"thin"}
         gutterBottom
         marginBottom={0}
@@ -52,10 +61,19 @@ const DcfInput = ({
           paddingLeft: 1.5,
           marginBottom: 0,
           marginLeft: 5,
-          width: 90,
+          width: {
+            xs: "50px",
+            sm: "70px",
+            md: "90px",
+          },
           fontFamily: "bebas-neue-pro",
           gridRow: "2",
-          fontSize: 18,
+          fontSize: {
+            xs: "14px",
+            sm: "16px",
+            md: "18px",
+          },
+          height: 40,
         }}
         value={getter || ""}
         size="small"
