@@ -116,6 +116,8 @@
   .dcf-body {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto auto auto;
+    padding-left: 40px;
+    padding-right: 40px;
   }
 
   .dcf-header {
@@ -159,8 +161,10 @@
 }
 
 @media only screen and (max-width: 755px) {
-  .dcf-calc-body {
+  .dcf-body {
     grid-template-rows: auto auto auto auto auto;
+    padding-left: 25px;
+    padding-right: 25px;
   }
 
   .dcf-graph {
@@ -197,5 +201,20 @@
 
   .dcf-result-container > p:first-child {
     font-size: 10px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+
+  .dcf-graph {
+    height: 150px;
+  }
+
+  .dcf-result {
+    font-size: 18px;
+  }
+
+  .dcf-result-container > p:first-child {
+    font-size: 8px;
   }
 }
