@@ -177,8 +177,8 @@ const Dcf = () => {
               tickMargin={10}
               tickFormatter={(value) =>
                 value < 999999
-                  ? Math.round(value / 1000).toLocaleString() + " TKR"
-                  : (value / 1000000).toFixed(2).toLocaleString() + " MKR"
+                  ? Math.round(value).toLocaleString()
+                  : (value / 1000000).toFixed(2).toLocaleString() + " M"
               }
               fontFamily="bebas-neue-pro"
               fontWeight={400}
