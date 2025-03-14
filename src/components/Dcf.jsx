@@ -21,7 +21,7 @@ const Dcf = () => {
 
   // --- ASSUMPTIONS MODEL ---
   // Tillväxttakt i mogna fasen
-  const [growthRateInPerpetuity, setGrowthRateInPerpetuity] = useState(2);
+  const growthRateInPerpetuity = 2.5; // %
 
   // State for the calculated values
   const [cumulativeDiscounted, setCumulativeDiscounted] = useState([]);
@@ -38,12 +38,13 @@ const Dcf = () => {
   useEffect(() => {
     // Kassaflöde
     let cashFlow = [stockPrice / PEratio];
+    
     // Nuvärde av kassaflöden
     let presentValueOfCashflow = [];
     // Kumulativt diskonterat kassaflöde (för graf)
     let cumulativeDiscountedValues = [
       {
-        "DISKONTERAT KASSAFLÖDE": cashFlow[0],
+        "DISKONTERAT KASSAFLÖDE": 0,
         ÅR: 0,
         "DAGENS AKTIEPRIS": stockPrice,
       },
@@ -68,7 +69,7 @@ const Dcf = () => {
         "DISKONTERAT KASSAFLÖDE":
           presentValueOfCashflow[i] +
           cumulativeDiscountedValues[i]["DISKONTERAT KASSAFLÖDE"],
-        ÅR: i + 1,
+        ÅR: i,
         "DAGENS AKTIEPRIS": stockPrice,
       });
     }
@@ -154,7 +155,7 @@ const Dcf = () => {
       </div>
       <div className="dcf-graph">
         <ResponsiveContainer className="responsive-chart">
-          <LineChart className="chart" data={cumulativeDiscounted}>
+          <LineChart className="chart" data={cumulativeDiscounted.slice(1)}>
             <Line
               type="monotone"
               dataKey="DISKONTERAT KASSAFLÖDE"
@@ -191,7 +192,7 @@ const Dcf = () => {
                   return value;
                 }
               }}
-              labelFormatter={(value) => "ÅR: " + value}
+              labelFormatter={(value) => "ÅR: " + (value + 1)}
               contentStyle={{
                 backgroundColor: "#fffffff, 0.8",
                 color: "#ffffff",

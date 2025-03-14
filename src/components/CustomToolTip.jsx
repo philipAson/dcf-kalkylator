@@ -11,7 +11,7 @@ const CustomToolTip = ({ toolTipText = "" }) => {
       backgroundColor: theme.palette.common.white,
       color: "rgba(0, 0, 0, 0.87)",
       boxShadow: theme.shadows[1],
-      fontSize: 11,
+      fontSize: 14,
       minWidth: {
         xs: 300,
         sm: 400,
@@ -24,7 +24,7 @@ const CustomToolTip = ({ toolTipText = "" }) => {
 
   return (
     <LightTooltip title={toolTipText} placement="top-end">
-      <InfoIcon sx={{fontSize: 14, marginLeft: 1}}/>
+      <InfoIcon sx={{fontSize: 18, marginLeft: 1}}/>
     </LightTooltip>
   );
 };
