@@ -31,9 +31,7 @@ const CustomToolTip = ({ toolTipText = "" }) => {
             leaveTouchdeDelay={4000}
             disableInteractive={false}
         >
-            <IconButton size="small" edge="start" aria-label="Info">
-                <InfoIcon sx={{ fontSize: 18, marginLeft: 1 }} />
-            </IconButton>
+            <InfoIcon sx={{ fontSize: 18, marginLeft: 1 }} />
         </LightTooltip>
     );
 };
