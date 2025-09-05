@@ -26,8 +26,8 @@ const CustomToolTip = ({ toolTipText = "" }) => {
         <LightTooltip
             title={toolTipText}
             placement="top-end"
-            enterTouchDealay={100}
-            leaveTouchdeDelay={4000}
+            enterTouchDelay={0}
+            leaveTouchDelay={4000}
             disableInteractive={false}
             arrow
         >
