@@ -237,7 +237,7 @@ const Dcf = () => {
           setter={setGrowthRate}
           handleSlider={handleSliderChange}
           handleInput={handleInputChange}
-          title="Årlig tillväxttakt"
+          title="Årlig vinsttillväxt"
           min={1}
           max={50}
           step={1}

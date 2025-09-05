@@ -23,7 +23,14 @@ const CustomToolTip = ({ toolTipText = "" }) => {
   }));
 
   return (
-    <LightTooltip title={toolTipText} placement="top-end">
+    <LightTooltip 
+      title={toolTipText} 
+      placement="top-end"
+      arrow
+      enterTouchDealay={0}
+      leaveTouchdeDelay={4000}
+      disableInteractive={false}
+    >
       <InfoIcon sx={{fontSize: 18, marginLeft: 1}}/>
     </LightTooltip>
   );
