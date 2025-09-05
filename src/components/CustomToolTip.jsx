@@ -26,10 +26,10 @@ const CustomToolTip = ({ toolTipText = "" }) => {
         <LightTooltip
             title={toolTipText}
             placement="top-end"
-            arrow
-            enterTouchDealay={0}
+            enterTouchDealay={100}
             leaveTouchdeDelay={4000}
             disableInteractive={false}
+            arrow
         >
             <InfoIcon sx={{ fontSize: 18, marginLeft: 1 }} />
         </LightTooltip>
